@@ -1,0 +1,8 @@
+pluginManagement {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+rootProject.name = 'payment-gateway-integration-java-main'
+include 'payment-gateway-integration-java-main:demo'

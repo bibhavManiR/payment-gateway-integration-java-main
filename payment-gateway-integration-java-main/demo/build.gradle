@@ -1,0 +1,100 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+// Define the plugins required for the project
+plugins {
+    // Provides standard Java compilation and testing capabilities
+    id 'java'
+    // Provides Spring Boot support (e.g., building executable jars, running the app)
+    id 'org.springframework.boot' version '3.2.3'
+    // Automatically manages dependency versions based on the Spring Boot version
+    id 'io.spring.dependency-management' version '1.1.4'
+}
+
+// Project metadata
+group = 'com.gateway'
+version = '0.0.1-SNAPSHOT'
+description = 'Order Microservice'
+
+// Configure Java compilation settings
+java {
+    // Enforce Java 17 for both source code and compiled bytecode
+    sourceCompatibility = '17'
+    targetCompatibility = '17'
+}
+
+// Custom configurations for dependencies
+configurations {
+    compileOnly {
+        // Allows compileOnly dependencies (like Lombok) to be used as annotation processors
+        extendsFrom annotationProcessor
+    }
+}
+
+// Define where Gradle should look for dependencies
+repositories {
+    // Fetches dependencies from the default Maven Central repository
+    mavenCentral()
+}
+
+// Define global extra properties
+ext {
+    // Specifies the Spring Cloud release train version to be used in dependencyManagement
+    set('springCloudVersion', "2023.0.0")
+}
+
+// Declare all project dependencies
+dependencies {
+    // Spring Boot Starters
+    // Provides JPA/Hibernate support for database interactions
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    // Enables building RESTful web applications using Spring MVC and Tomcat
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    // Provides Hibernate Validator for Bean Validation (e.g., @NotNull, @Size)
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // Spring Cloud
+    // Enables declarative REST clients to communicate with other microservices or external APIs
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+    // Third-party Integrations
+    // Stripe Payment Gateway official Java SDK
+    implementation 'com.stripe:stripe-java:24.15.0'
+    // Razorpay Payment Gateway official Java SDK
+    implementation 'com.razorpay:razorpay-java:1.4.4'
+    // Jackson Data-bind for JSON serialization and deserialization
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+    // Database (Runtime)
+    // PostgreSQL JDBC driver, needed only at runtime to connect to the DB
+    runtimeOnly 'org.postgresql:postgresql'
+
+    // Lombok (Compile-time & Annotation Processor)
+    // Reduces boilerplate code (getters, setters, constructors) via annotations
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // Testing
+    // Starter for testing Spring Data JPA repositories
+    testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    // Starter for testing Spring Boot Applications
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+// Centralized version management for dependencies
+dependencyManagement {
+    imports {
+        // Imports the Spring Cloud Bill of Materials (BOM) to automatically resolve compatible versions
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+// Configure the test task
+tasks.named('test') {
+    // Specifies that tests should be executed using the JUnit Platform (JUnit 5)
+    useJUnitPlatform()
+}
