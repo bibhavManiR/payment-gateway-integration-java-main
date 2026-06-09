@@ -342,6 +342,3 @@ Exit:
 - Kafka events: `payment.success`, `payment.failed`
 
 ---
-
-## 👨‍💻 Author
-This project was adapted from a Maven project by Manas Goyal.
